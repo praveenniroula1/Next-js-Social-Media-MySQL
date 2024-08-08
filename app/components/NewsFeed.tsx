@@ -63,7 +63,9 @@ const NewsFeed = () => {
   ];
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="w-[40%] h-full -m-12 border-3 border-blue-500 flex items-start justify-center">
+
+<div className="p-8 space-y-6">
       {posts.map((post) => (
         <div key={post.id} className="bg-white p-4 rounded-lg shadow-md">
           {/* Post Header */}
@@ -94,7 +96,7 @@ const NewsFeed = () => {
             <button className="text-blue-500 hover:text-black-700">
             </button>
             <span className="flex">
-              <IoHeart className="text-red-500 text-2xl"/><span>10</span>
+              <IoHeart className=" fill-red-500 text-2xl"/><span>10</span>
             </span>{" "}
           </div>
 
@@ -127,6 +129,8 @@ const NewsFeed = () => {
         </div>
       ))}
     </div>
+    </div>
+   
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 interface UserCardProps {
   user: {
@@ -14,7 +15,9 @@ interface UserCardProps {
 const UserCard = () => {
   const user = useSelector((state: any) => state.user.user);
   return (
-    <div className="flex flex-col items-center w-full bg-gray-800 text-white p-4 rounded-lg">
+    <div className="w-[25%] mt-3">
+
+<div className="flex flex-col items-center w-full bg-gray-800 text-white p-4 rounded-lg">
       {/* Profile Icon and Name */}
       <div className="flex flex-col items-center mb-8">
         <CgProfile className="text-6xl text-blue-500 mb-4" />
@@ -27,15 +30,15 @@ const UserCard = () => {
       <div className="w-full mb-6">
         <div className="flex justify-around w-full text-center mb-4">
           <div>
-            <div className="text-xl font-semibold">{user?.posts || 0}</div>
+            <div className="text-xl font-semibold">{user?.posts || 11}</div>
             <div className="text-gray-300">Posts</div>
           </div>
           <div>
-            <div className="text-xl font-semibold">{user?.followers || 0}</div>
+            <div className="text-xl font-semibold">{user?.followers ||  3}</div>
             <div className="text-gray-300">Followers</div>
           </div>
           <div>
-            <div className="text-xl font-semibold">{user?.following || 0}</div>
+            <div className="text-xl font-semibold">{user?.following || 7}</div>
             <div className="text-gray-300">Following</div>
           </div>
         </div>
@@ -57,7 +60,7 @@ const UserCard = () => {
           Create a Post
         </button>
         <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
-          Friends
+         <Link href="/friends">Friends</Link> 
         </button>
         <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
           Liked Posts
@@ -67,6 +70,8 @@ const UserCard = () => {
         </button>
       </div>
     </div>
+    </div>
+   
   );
 };
 
