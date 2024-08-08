@@ -1,0 +1,24 @@
+import React from "react";
+
+const SponsoredCard = () => {
+  return (
+    <div className="bg-dark p-4 rounded-lg shadow-md">
+      {/* Sponsored Image */}
+      <img
+        src="https://glamadelaide.com.au/wp-content/uploads/2024/03/The-Turkish-Delight-hero-.jpg"
+        alt="Sponsored content"
+        className="w-full h-64 object-cover rounded-lg mb-4"
+      />
+
+      {/* Sponsored Text */}
+      <div className="text-center">
+        <h3 className="text-xl font-semibold mb-2">Advertise with Us</h3>
+        <p className="text-gray-600">
+          You can run your ad in our applications and reach a wider audience!
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default SponsoredCard;
