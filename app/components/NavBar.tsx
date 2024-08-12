@@ -5,10 +5,20 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../redux/slices/userSlice";
+import {
+  CiAirportSign1,
+  CiAlignBottom,
+  CiParking1,
+  CiPower,
+} from "react-icons/ci";
+import { AiFillApple, AiFillProfile } from "react-icons/ai";
+import { CgProfile, CgSearchLoading } from "react-icons/cg";
+import { ImProfile } from "react-icons/im";
+import { RiProfileLine } from "react-icons/ri";
+import { FaTruckLoading } from "react-icons/fa";
 
 const Navbar: React.FC = () => {
   const user = useSelector((state: any) => state.user.user);
-  console.log(user);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -25,23 +35,24 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-800 p-4 ">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="text-white text-2xl font-bold">
+        <div className="text-white text-2xl font-bold ">
           <Link href="/">
-            <span className=" font-bold text-4xl drop-shadow-[0_1px_2px_rgba(25,215,255,1)]">
+            <span className=" font-bold text-4xl drop-shadow-[0_1px_2px_rgba(25,215,255,1)] flex justify-center items-center h-9">
               <span className="text-orange-600">M</span>
-              <span className="text-white">A</span>
+              <span className="text-white ">A</span>
               <span className="text-orange-600">R</span>
               <span className="text-white">I</span>
               <span className="text-orange-600">C</span>
               <span className="text-white">H</span>
               <span className="text-orange-600">E</span>
               <span className="text-white">Y</span>
+              <span className="text-yellow-500 m-10 flex">
+                <CgSearchLoading className="" />{" "}
+                {user && user.name && `Hello ${user.name}`}
+              </span>
             </span>{" "}
-            <span className="text-yellow-500 m-10">
-              {user && user.name && `Hello ${user.name}`}
-            </span>
           </Link>
         </div>
         <ul className="flex space-x-4">

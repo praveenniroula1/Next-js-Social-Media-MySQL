@@ -20,6 +20,7 @@ export const config = {
         "/dashboard",
         "/register",
         "/friends",
-        "/notifications"
+        "/notifications",
+        "/create-post"
     ],
 }

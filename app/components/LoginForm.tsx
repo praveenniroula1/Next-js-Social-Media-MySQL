@@ -25,7 +25,6 @@ const LoginForm = () => {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     setUser(user);
-    console.log(user);
     const response = await axios.post(
       "http://localhost:3000/api/user/login",
       user
