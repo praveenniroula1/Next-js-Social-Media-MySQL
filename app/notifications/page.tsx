@@ -2,8 +2,10 @@
 import React from 'react'
 import UserCard from '../components/UserCard'
 import SponsoredCard from '../components/SponsorCard'
+import { useSelector } from 'react-redux'
 
 const NotificationPage = () => {
+
     const notifications = [
         { id: 1, message: 'John Doe liked your post.', time: '2 minutes ago' },
         { id: 2, message: 'Jane Smith commented on your photo.', time: '5 minutes ago' },

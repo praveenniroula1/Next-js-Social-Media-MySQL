@@ -50,17 +50,15 @@ const Dashboard = () => {
   return (
     <div className="flex justify-between h-screen p-8">
       {/* left - Sidebar */}
-     
-        <UserCard />
+
+      <UserCard />
 
       {/* center - NewsFeed */}
-      
-        <NewsFeed />
-    
 
+      <NewsFeed />
+
+      <SponsoredCard />
       {/* right - SponsoredCard */}
-        <SponsoredCard />
-    
     </div>
   );
 };

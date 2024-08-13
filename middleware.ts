@@ -21,6 +21,8 @@ export const config = {
         "/register",
         "/friends",
         "/notifications",
-        "/create-post"
+        "/create-post",
+        "/profile",
+        "/friends"
     ],
 }

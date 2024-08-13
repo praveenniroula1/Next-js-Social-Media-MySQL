@@ -1,71 +1,139 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import { IoHeart } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { toogleLike } from "../redux/slices/likeSlice";
 
 const UsersPost = () => {
-  const [posts, setPosts] = useState([]);
+  const dispatch = useDispatch();
+  const [likedPosts, setLikedPosts] = useState(new Set());
+  const [userPost, setUserPost] = useState([]);
+  const [likesCount, setLikesCount] = useState({});
 
-  const fetchUsersPost = async () => {
+  // Fetch all posts
+  const fetchPosts = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/posts");
+      setUserPost(response.data.results || []);
       console.log(response.data.results);
-      setPosts(response.data.results);
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      console.log("Error fetching posts:", error);
     }
   };
 
+  // Fetch liked posts for the current user
+  const fetchLikedPosts = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/likes/user");
+      const likedPostIds = new Set(response.data.likedPostIds);
+      setLikedPosts(likedPostIds);
+    } catch (error) {
+      console.log("Error fetching liked posts:", error);
+    }
+  };
+
+  // Fetch the like count for a specific post
+  const fetchLikesCount = async (postId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/likes?postId=${postId}`
+      );
+      setLikesCount((prev) => ({ ...prev, [postId]: response.data.likeCount }));
+    } catch (error) {
+      console.log("Error fetching like count:", error);
+    }
+  };
+
+  // Fetch posts and liked posts on component mount
   useEffect(() => {
-    fetchUsersPost();
+    fetchPosts();
+    fetchLikedPosts();
   }, []);
 
+  // Fetch likes count for all posts after posts are fetched
+  useEffect(() => {
+    if (Array.isArray(userPost) && userPost.length > 0) {
+      userPost.forEach((post) => {
+        fetchLikesCount(post.postId);
+      });
+    }
+  }, [userPost]);
+
+  // Handle like/unlike button click
+  const handleLike = async (postId) => {
+    const alreadyLiked = likedPosts.has(postId);
+    if (alreadyLiked) {
+      setLikedPosts((prev) => new Set([...prev].filter((id) => id !== postId)));
+    } else {
+      setLikedPosts((prev) => new Set([...prev, postId]));
+    }
+
+    dispatch(toogleLike({ id: postId }));
+
+    try {
+      await axios.post("http://localhost:3000/api/likes", {
+        postId,
+        liked: !alreadyLiked,
+      });
+      fetchLikesCount(postId);
+    } catch (error) {
+      console.log("Error toggling like:", error);
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">All Your Posts:</h1>
-      {posts.length > 0 ? (
-        <div className="space-y-6 h-full">
-          {posts.map((post, index) => (
-            <div
-              key={post.id || index}
-              className="bg-white shadow-md rounded-lg overflow-hidden w-[50%] m-auto transition transform hover:scale-105 hover:shadow-lg"
-            >
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2 text-gray-800">
-                  {post.description}
-                </h2>
-
-                {/* Image placeholder */}
-                {post.url && (
-                  <div className="relative h-64 bg-gray-200 mb-4 rounded-lg overflow-hidden">
-                    <Image
-                      src={post.url}
-                      alt="Post image"
-                      layout="fill"
-                      objectFit="contain"
-                    />
-                  </div>
-                )}
-
-                {/* Additional post details here */}
-                <div className="text-gray-600 mt-4">
-                  <p className="font-medium mb-2">Likes: {post.likes || 0}</p>
-                  <p className="font-medium">Comments:</p>
-                  <ul className="list-disc ml-6 mt-2">
-                    {(post.comments || []).map((comment, index) => (
-                      <li key={index}>{comment}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+    <div className="flex flex-col m-auto w-[100%] items-center space-y-8 py-10">
+      {userPost.length === 0 ? (
+        <p>No posts available</p>
       ) : (
-        <p className="text-gray-500">No posts available</p>
+        userPost.map((item, index) => (
+          <div
+            key={item.postId || index}
+            className="bg-white rounded-lg shadow-lg p-6 w-96 hover:shadow-2xl transition duration-300 ease-in-out"
+          >
+            <h1 className="text-xl font-semibold mb-4 text-center">
+              {item.description}
+            </h1>
+            <div className="flex justify-center mb-4">
+              <Image
+                src={item.url}
+                height={500}
+                width={500}
+                className="rounded-lg object-cover"
+                alt="Post Image"
+              />
+            </div>
+            <div className="flex items-center justify-between mt-4">
+              <div className="flex items-center space-x-2">
+                <button onClick={() => handleLike(item.postId)}>
+                  <IoHeart
+                    className={`text-2xl ${
+                      likedPosts.has(item.postId) || likesCount[item.postId] > 0
+                        ? "text-red-500"
+                        : "text-black"
+                    }`}
+                  />
+                </button>
+                <span className="text-gray-600 font-medium">
+                  {likesCount[item.postId] || 0}
+                </span>
+              </div>
+              <input
+                placeholder="Add a comment..."
+                className="border rounded-lg p-2 w-full mr-2 text-sm"
+              />
+              <button className="bg-blue-500 text-white rounded-lg px-4 py-2 text-sm">
+                Comment
+              </button>
+            </div>
+          </div>
+        ))
       )}
     </div>
   );
 };
 
 export default UsersPost;
+
