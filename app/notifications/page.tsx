@@ -1,46 +1,87 @@
-"use client"
-import React from 'react'
-import UserCard from '../components/UserCard'
-import SponsoredCard from '../components/SponsorCard'
-import { useSelector } from 'react-redux'
+"use client";
+import React, { useEffect, useState } from "react";
+import { CgProfile } from "react-icons/cg";
+import axios from "axios";
+import UserCard from "../components/UserCard";
+import SponsoredCard from "../components/SponsorCard";
 
-const NotificationPage = () => {
+const Notifications = () => {
+  const [notifications, setNotifications] = useState<any[]>([]);
 
-    const notifications = [
-        { id: 1, message: 'John Doe liked your post.', time: '2 minutes ago' },
-        { id: 2, message: 'Jane Smith commented on your photo.', time: '5 minutes ago' },
-        { id: 3, message: 'Mike Johnson started following you.', time: '10 minutes ago' },
-        { id: 4, message: 'Anna Lee shared your status update.', time: '15 minutes ago' },
-        { id: 6, message: 'Jane Smith commented on your photo.', time: '20 minutes ago' },
-        { id: 7, message: 'Chris Brown sent you a friend request.', time: '20 minutes ago' },
-        { id: 8, message: 'John Doe liked your post.', time: '20 minutes ago' },
-        { id: 9, message: 'Chris Brown sent you a friend request.', time: '20 minutes ago' },
-        { id: 10, message: 'Chris Brown sent you a friend request.', time: '20 minutes ago' },
-      ];
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/notifications"
+        );
+        if (response.data.status === "success") {
+          setNotifications(response.data.data);
+        } else {
+          console.error(response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  const handleAccept = async (notificationId: number) => {
+    // Implement accept follow request logic here
+    console.log("Accepted follow request:", notificationId);
+  };
+
+  const handleReject = async (notificationId: number) => {
+    // Implement reject follow request logic here
+    console.log("Rejected follow request:", notificationId);
+  };
+
   return (
-    <div className='flex justify-between m-8'>
-        <UserCard/>
-        <div className='w-full max-w-md p-4 bg-white shadow-md rounded-lg'>
-      <h2 className='text-xl font-semibold mb-4'>Notifications</h2>
-      <ul className='space-y-3'>
-        {notifications.map((notification) => (
-          <li key={notification.id} className='flex items-start space-x-3 border-b pb-2'>
-            <div className='flex-shrink-0'>
-              <svg className='w-6 h-6 text-blue-500' fill='currentColor' viewBox='0 0 24 24'>
-                <path d='M12 2C6.48 2 2 6.48 2 12c0 4.09 2.53 7.55 6.12 9.17-.19-.77-.29-1.59-.29-2.42V16H6v-2h1.03C7.07 11.29 8.67 10 10.5 10h3c1.83 0 3.43 1.29 3.47 3H18v2h-1.83c.08.8.25 1.62.53 2.42C19.48 19.55 22 16.09 22 12c0-5.52-4.48-10-10-10z'/>
-              </svg>
-            </div>
-            <div className='flex-1'>
-              <p className='text-md'>{notification.message}</p>
-              <p className='text-sm text-gray-500'>{notification.time}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className="flex justify-between h-screen p-8">
+      {/* left - Sidebar */}
+      <UserCard />
+      <div className=" mx-auto mt-8 p-4 bg-white rounded-lg shadow-lg">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Notifications
+        </h2>
+        <ul className="space-y-4">
+          {notifications.map((notification, index) => (
+            <li
+              key={index}
+              className="flex items-center justify-between bg-gray-100 p-3 rounded-lg"
+            >
+              <div className="flex items-center">
+                <CgProfile className="text-blue-500 text-2xl mr-3" />
+                <span className="text-gray-700 font-medium">
+                  {notification.senderName}
+                </span>
+                <span className="text-sm text-gray-500 ml-2">
+                  sent you a follow request.
+                </span>{" "}
+              </div>{" "}
+              <div className="space-x-2 flex">
+                <button
+                  onClick={() => handleAccept(notification.notificationId)}
+                  className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                >
+                  Accept
+                </button>
+                <button
+                  onClick={() => handleReject(notification.notificationId)}
+                  className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
+                >
+                  Reject
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {/* right - SponsoredCard */}
+      <SponsoredCard />
     </div>
-      <SponsoredCard/>
-    </div>
-  )
-}
+  );
+};
 
-export default NotificationPage
+export default Notifications;
