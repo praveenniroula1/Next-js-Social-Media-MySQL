@@ -29,7 +29,6 @@ const LoginForm = () => {
       "http://localhost:3000/api/user/login",
       user
     );
-    console.log(response.data)
     if (response.data.status === "error") {
       return window.alert("You cant logged in");
     } else {

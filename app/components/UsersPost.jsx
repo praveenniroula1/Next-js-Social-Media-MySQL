@@ -12,18 +12,15 @@ const UsersPost = () => {
   const [userPost, setUserPost] = useState([]);
   const [likesCount, setLikesCount] = useState({});
 
-  // Fetch all posts
   const fetchPosts = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/posts");
       setUserPost(response.data.results || []);
-      console.log(response.data.results);
     } catch (error) {
       console.log("Error fetching posts:", error);
     }
   };
 
-  // Fetch liked posts for the current user
   const fetchLikedPosts = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/likes/user");
@@ -34,7 +31,6 @@ const UsersPost = () => {
     }
   };
 
-  // Fetch the like count for a specific post
   const fetchLikesCount = async (postId) => {
     try {
       const response = await axios.get(
@@ -46,13 +42,11 @@ const UsersPost = () => {
     }
   };
 
-  // Fetch posts and liked posts on component mount
   useEffect(() => {
     fetchPosts();
     fetchLikedPosts();
   }, []);
 
-  // Fetch likes count for all posts after posts are fetched
   useEffect(() => {
     if (Array.isArray(userPost) && userPost.length > 0) {
       userPost.forEach((post) => {
@@ -61,7 +55,6 @@ const UsersPost = () => {
     }
   }, [userPost]);
 
-  // Handle like/unlike button click
   const handleLike = async (postId) => {
     const alreadyLiked = likedPosts.has(postId);
     if (alreadyLiked) {

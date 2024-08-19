@@ -1,111 +1,91 @@
-// Get User in People you may know
-
 import { getDataFromToken } from "@/app/components/Helpers/getDataFromToken";
 import { connectDB } from "@/app/DB-Config/dbCOnfig";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (request: NextRequest) => {
     try {
-        const loggedInUserId = await getDataFromToken(request);
+        const id = await getDataFromToken(request);
         const db = await connectDB();
-
-        const query = `
-            SELECT u.* 
-            FROM users u
-            LEFT JOIN follow f 
-            ON u.id = f.requestReceiverId AND f.requestSenderId = ?
-            WHERE u.id != ? AND (f.accepted IS NULL OR f.accepted = 0) AND (f.status IS NULL OR f.status = 'unsent')
-        `;
-
-        const [results]: any = await db.query(query, [loggedInUserId, loggedInUserId]);
-
+        const query = `select * from users where id=?`;
+        const [results]: any = await db.query(query, [id]);
         if (results.length === 0) {
             return NextResponse.json({
                 status: "error",
-                message: "No users found",
+                message: "No user found",
             });
         }
+        const userDetails = results[0];
+        const peopleYouMayKnowQuery = `
+        SELECT * 
+        FROM users u 
+        WHERE u.id NOT IN (
+            SELECT f.requestReceiverId 
+            FROM follow f 
+            WHERE f.requestSenderId = ? AND f.accepted = 1
+            UNION
+            SELECT f.requestSenderId 
+            FROM follow f 
+            WHERE f.requestReceiverId = ? AND f.accepted = 1
+        ) 
+        AND u.id != ?;
+    `;
 
+        const [rows] = await db.query(peopleYouMayKnowQuery, [userDetails.id, userDetails.id,userDetails.id]);
         return NextResponse.json({
             status: "success",
-            data: results,
+            message: "User Found",
+            rows,
         });
+
     } catch (error) {
-        return NextResponse.json({
-            status: "error",
-            message: "Something went wrong",
-        });
+        console.log(error)
     }
+
 }
-
-
-export const sendNotification = async (senderId: number, receiverId: number, message: string) => {
-    try {
-        const db = await connectDB();
-        const insertNotificationQuery = `
-            INSERT INTO notifications (senderId, receiverId, message, createdAt)
-            VALUES (?, ?, ?, NOW())
-        `;
-        await db.query(insertNotificationQuery, [senderId, receiverId, message]);
-        console.log('Notification sent successfully');
-    } catch (error) {
-        console.error('Error sending notification:', error);
-    }
-};
-
-
 export const POST = async (request: NextRequest) => {
-    try {
-        const loggedInUserId = await getDataFromToken(request);
-        const { requestReceiverId } = await request.json();
-        const db = await connectDB();
+  try {
+    const { idToFollow } = await request.json();
+    const id = await getDataFromToken(request);
 
-        // Fetch the sender's name
-        const senderQuery = `
-            SELECT name
-            FROM users
-            WHERE id = ?
-        `;
-        const [senderResult]: any = await db.query(senderQuery, [loggedInUserId]);
-        const senderName = senderResult[0].name;
+    const db = await connectDB();
 
-        // Check if a follow request already exists
-        const checkQuery = `
-            SELECT * FROM follow
-            WHERE requestSenderId = ? AND requestReceiverId = ?
-        `;
-        const [existingFollow]: any = await db.query(checkQuery, [loggedInUserId, requestReceiverId]);
+    const checkFollowQuery = `
+      SELECT * FROM follow 
+      WHERE requestSenderId = ? 
+      AND requestReceiverId = ?`;
+    const [existingFollow]: any = await db.query(checkFollowQuery, [id, idToFollow]);
 
-        if (existingFollow.length > 0) {
-            return NextResponse.json({
-                status: "error",
-                message: "Follow request already exists",
-            });
-        }
-
-        // Insert a new follow request
-        const insertQuery = `
-            INSERT INTO follow (requestSenderId, requestReceiverId, accepted, status)
-            VALUES (?, ?, false, 'sent')
-        `;
-        await db.query(insertQuery, [loggedInUserId, requestReceiverId]);
-
-        // Insert a notification
-        const notificationQuery = `
-            INSERT INTO notifications (userId, senderId, senderName, message, createdAt)
-            VALUES (?, ?, ?, 'You have a new follow request', NOW())
-        `;
-        await db.query(notificationQuery, [requestReceiverId, loggedInUserId, senderName]);
-
-        return NextResponse.json({
-            status: "success",
-            message: "Follow request sent successfully",
-        });
-    } catch (error) {
-        console.error("Error details:", error);
-        return NextResponse.json({
-            status: "error",
-            message: "Something went wrong",
-        });
+    if (existingFollow.length > 0) {
+      return NextResponse.json({
+        status: "error",
+        message: "Follow request already sent",
+      });
     }
+
+    const followQuery = `
+      INSERT INTO follow (requestSenderId, requestReceiverId, accepted, status)
+      VALUES (?, ?, 0, 'sent')`;
+    await db.query(followQuery, [id, idToFollow]);
+
+    const senderQuery = `SELECT name FROM users WHERE id = ?`;
+    const [senderData]: any = await db.query(senderQuery, [id]);
+    const senderName = senderData[0].name;
+
+    const notificationQuery = `
+      INSERT INTO notifications (userId, type, message, senderId, senderName)
+      VALUES (?, 'follow_request', ?, ?, ?)`;
+    const message = `${senderName} sent you a friend request.`;
+    await db.query(notificationQuery, [idToFollow, message, id, senderName]);
+
+    return NextResponse.json({
+      status: "success",
+      message: "Follow request sent and notification created",
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({
+      status: "error",
+      message: "An error occurred while processing the follow request",
+    });
+  }
 };

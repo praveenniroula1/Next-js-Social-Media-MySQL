@@ -4,7 +4,7 @@ import UserCard from "../components/UserCard";
 import SponsoredCard from "../components/SponsorCard";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import Followers from "../components/Followers"; // Renamed component
+import Followers from "../components/Friends"; // Renamed component
 import PeopleYouMayKnow from "../components/PeopleYouMayKnow";
 
 interface Friend {
@@ -53,7 +53,6 @@ const FriendsList = () => {
             )
           );
         } else if (friend.isRequestPending) {
-          console.log("Request already pending or followed");
         }
       }
     } catch (error) {

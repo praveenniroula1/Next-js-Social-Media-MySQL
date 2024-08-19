@@ -6,12 +6,10 @@ export const POST = async (request: NextRequest) => {
   try {
     const reqBody = await request.json()
     const { email, password } = reqBody
-    console.log(email, password)
     const db = await connectDB()
     const query = "select * from users where email=? and password=?"
     const [results]: any[] = await db.query(query, [email, password]);
 
-    // Check if any user was found
     if (results.length === 0) {
       return NextResponse.json({
         status: "error",
@@ -21,7 +19,6 @@ export const POST = async (request: NextRequest) => {
 
     const user = results[0]
 
-    //create token data
     const tokenData = {
       id: user.id,
       name: user.name,

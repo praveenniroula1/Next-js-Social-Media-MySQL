@@ -48,9 +48,9 @@ const Navbar: React.FC = () => {
               <span className="text-white">H</span>
               <span className="text-orange-600">E</span>
               <span className="text-white">Y</span>
-              <span className="text-yellow-500 m-10 flex">
+              <span className="text-white m-5 flex text-3xl">
                 <CgSearchLoading className="" />{" "}
-                {user && user.name && `Hello ${user.name}`}
+                {user && user.name && `Welcome ${user.name}`}
               </span>
             </span>{" "}
           </Link>

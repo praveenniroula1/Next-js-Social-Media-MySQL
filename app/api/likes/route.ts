@@ -20,12 +20,10 @@ export const POST = async (request: NextRequest) => {
         const body = await request.json();
         const { postId, liked }: any = body;
 
-        // Check if the like already exists
         const checkQuery = `SELECT * FROM post_likes WHERE userId=? AND postId=?`;
         const [checkResponse]: any = await db.query(checkQuery, [userDetails.id, postId]);
 
         if (liked) {
-            // Insert new like
             if (checkResponse.length > 0) {
                 return NextResponse.json({
                     status: "error",
@@ -39,7 +37,6 @@ export const POST = async (request: NextRequest) => {
                 message: "Like stored",
             });
         } else {
-            // Remove like
             if (checkResponse.length === 0) {
                 return NextResponse.json({
                     status: "error",

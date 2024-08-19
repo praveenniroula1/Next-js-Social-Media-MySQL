@@ -24,7 +24,6 @@ const Dashboard = () => {
   const fetchUser = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/dashboard");
-      console.log(response.data.userDetails);
       setUser(response.data.userDetails);
       dispatch(addUser(response.data.userDetails));
     } catch (error) {
@@ -48,8 +47,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="flex justify-between h-screen p-8">
-      {/* left - Sidebar */}
+    <div className="flex flex-col md:flex-row justify-between m-8 space-y-4 md:space-y-0">
 
       <UserCard />
 

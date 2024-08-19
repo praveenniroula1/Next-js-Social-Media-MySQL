@@ -3,14 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
     try {
-        const reqBody = await request.json(); // Await the request.json() call
+        const reqBody = await request.json(); 
         const { name, email, password } = reqBody;
 
-        const db = await connectDB(); // Await the DB connection
+        const db = await connectDB(); 
 
         const query = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
 
-        // Execute the query using async/await
         const [result] = await db.query(query, [name, email, password]);
 
         return NextResponse.json({
