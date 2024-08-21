@@ -24,11 +24,11 @@ const LoginForm = () => {
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
-    setUser(user);
     const response = await axios.post(
       "http://localhost:3000/api/user/login",
       user
     );
+    setUser(user);
     if (response.data.status === "error") {
       return window.alert("You cant logged in");
     } else {

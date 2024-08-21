@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/user/login/route.jsx", "app/api/user/route.ts", "app/components/PeopleYouMayKnow.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/user/login/route.jsx", "app/api/user/route.ts", "app/components/PeopleYouMayKnow.jsx", "app/components/NewsFeed.jsx"],
   "exclude": ["node_modules"]
 }
