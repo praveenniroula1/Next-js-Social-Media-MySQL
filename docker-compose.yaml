@@ -1,19 +1,23 @@
+version: "3"
 services:
-  nextjs:
+  app:
     build: .
     ports:
       - "3000:3000"
     environment:
-      - DB_HOST=mysql
-      - DB_USER=root
-      - DB_PASSWORD=1234
-      - DB_NAME=social_media
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: 1234
+      DB_NAME: social_media
     depends_on:
-      - mysql
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
 
-  mysql:
+  db:
     image: mysql:8.0
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: social_media

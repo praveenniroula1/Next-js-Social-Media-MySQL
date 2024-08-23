@@ -5,6 +5,7 @@ import SponsoredCard from "../components/SponsorCard";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { METHODS } from "http";
+import Image from "next/image";
 
 const CreatePost = () => {
   const [form, setForm] = useState({
@@ -90,7 +91,7 @@ const CreatePost = () => {
               <div className="flex flex-wrap gap-2 mb-4">
                 {images.map((image, index) => (
                   <div key={index} className="relative w-24 h-24">
-                    <img
+                    <Image
                       src={URL.createObjectURL(image)}
                       alt={`preview-${index}`}
                       className="object-cover w-full h-full rounded-lg border"

@@ -1,7 +1,7 @@
 import mysql from "mysql2/promise";
 
 const poolConfig = {
-  host: "localhost",
+  host: "db",
   user: "root",
   password: "1234",
   database: "social_media",

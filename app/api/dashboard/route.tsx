@@ -1,12 +1,13 @@
+// app/api/dashboard/route.tsx
 import { getDataFromToken } from "@/app/components/Helpers/getDataFromToken";
 import { connectDB } from "@/app/DB-Config/dbCOnfig";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (request: NextRequest) => {
   try {
-    const id = await getDataFromToken(request);
+    const id = await getDataFromToken(request); // Ensure this function is correctly implemented
     const db = await connectDB();
-    const query = `select * from users where id=?`;
+    const query = `SELECT * FROM users WHERE id=?`;
     const [results]: any = await db.query(query, [id]);
     if (results.length === 0) {
       return NextResponse.json({
@@ -21,6 +22,10 @@ export const GET = async (request: NextRequest) => {
       userDetails,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error); // Ensure to log the error for debugging
+    return NextResponse.json({
+      status: "error",
+      message: "An error occurred",
+    });
   }
 };

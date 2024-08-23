@@ -1,10 +1,11 @@
+import Image from "next/image";
 import React from "react";
 
 const SponsoredCard = () => {
   return (
     <div className="w-[30%] h-full border-3 border-green-500 flex items-start justify-center">
       <div className="bg-dark p-4 rounded-lg shadow-md">
-        <img
+        <Image
           src="https://glamadelaide.com.au/wp-content/uploads/2024/03/The-Turkish-Delight-hero-.jpg"
           alt="Sponsored content"
           className="w-full h-64 object-cover rounded-lg mb-4"

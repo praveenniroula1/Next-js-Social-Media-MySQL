@@ -10,11 +10,11 @@ const initialState = {
 };
 
 const LoginForm = () => {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const router = useRouter();
   const [user, setUser] = useState(initialState);
 
-  const handleOnChange = (e:any) => {
+  const handleOnChange = (e: any) => {
     const { name, value } = e.target;
     setUser({
       ...user,
@@ -22,17 +22,21 @@ const LoginForm = () => {
     });
   };
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const response = await axios.post(
-      "http://localhost:3000/api/user/login",
-      user
-    );
-    setUser(user);
-    if (response.data.status === "error") {
-      return window.alert("You cant logged in");
-    } else {
-      router.push(`/dashboard`);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/user/login",
+        user
+      );
+      setUser(user);
+      if (response.data.status === "error") {
+        return window.alert("You cant logged in");
+      } else {
+        router.push(`/dashboard`);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -80,7 +84,7 @@ const LoginForm = () => {
             Login
           </button>
           <p className="mt-4 text-gray-600 text-center">
-            Don't have an account?{" "}
+            Dont have an account?{" "}
             <a href="/register" className="text-blue-600 hover:underline">
               Register here
             </a>

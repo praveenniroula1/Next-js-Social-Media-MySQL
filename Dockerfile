@@ -1,23 +1,14 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
-
-# Set the working directory in the container
+# Stage 1: Build the Next.js app
+FROM node:18-alpine AS builder
 WORKDIR /app
-
-# Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of your application code
 COPY . .
-
-# Expose the port on which your app will run
-EXPOSE 3000
-
-# Build the app for production
 RUN npm run build
 
-# Start the Next.js app
+# Stage 2: Run the Next.js app in development mode
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app ./
+EXPOSE 3000
 CMD ["npm", "run", "dev"]
