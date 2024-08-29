@@ -9,6 +9,8 @@ const SponsoredCard = () => {
           src="https://glamadelaide.com.au/wp-content/uploads/2024/03/The-Turkish-Delight-hero-.jpg"
           alt="Sponsored content"
           className="w-full h-64 object-cover rounded-lg mb-4"
+          width={50}
+          height={50}
         />
 
         <div className="text-center">

@@ -1,66 +1,57 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import axios from "axios";
 
-interface UserCardProps {
-  user: {
-    name: string;
-    posts: number;
-    followers: number;
-    following: number;
-  } | null;
-}
-
 const UserCard = () => {
   const [posts, setPosts] = useState(0);
   const user = useSelector((state: any) => state.user.user);
 
-  const PostsNumber = async () => {
-    const response = await axios.get("http://localhost:3000/api/posts");
-    if (!response.data.results) {
-      return;
-    } else {
-      const lengthOfPost = response.data.results.length;
-      setPosts(lengthOfPost);
+  const fetchPostsNumber = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/posts");
+      if (response.data.results) {
+        setPosts(response.data.results.length);
+      }
+    } catch (error) {
+      console.error("Failed to fetch posts number", error);
     }
   };
 
   useEffect(() => {
-    PostsNumber();
-  }, [posts]);
+    fetchPostsNumber();
+  }, []);
 
   return (
-    <div className="w-[25%] mt-3 ">
-      <div className="flex flex-col items-center w-full bg-gray-800 text-white p-4 rounded-lg">
+    <div className="w-full md:w-1/4 mt-3">
+      <div className="flex flex-col items-center w-full bg-gray-800 text-white p-6 rounded-lg shadow-lg">
         {/* Profile Icon and Name */}
         <Link href="/profile">
-          <div className="flex flex-col items-center mb-8">
-            <CgProfile className="text-6xl text-blue-500 mb-4 " />
+          <div className="flex flex-col items-center mb-6 cursor-pointer">
+            <CgProfile className="text-6xl text-blue-500 mb-4" />
             <div className="text-2xl font-semibold">
-              {user && user.name && `${user.name}`}
+              {user?.name || "User Name"}
             </div>
           </div>
         </Link>
 
         {/* Posts, Followers, Following */}
         <div className="w-full mb-6">
-          <div className="flex justify-around w-full text-center mb-4">
+          <div className="flex justify-around text-center mb-4">
             <div>
-              <div className="text-xl font-semibold"> {posts || 0} </div>
-
+              <div className="text-xl font-semibold">{posts}</div>
               <div className="text-gray-300">Posts</div>
             </div>
             <div>
               <div className="text-xl font-semibold">
-                {user?.followers || 3}
+                {user?.followers || 0}
               </div>
               <div className="text-gray-300">Followers</div>
             </div>
             <div>
               <div className="text-xl font-semibold">
-                {user?.following || 7}
+                {user?.following || 0}
               </div>
               <div className="text-gray-300">Following</div>
             </div>
@@ -79,12 +70,16 @@ const UserCard = () => {
 
         {/* Additional Items */}
         <div className="w-full">
-          <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
-            <Link href="/create-post">Create a Post</Link>
-          </button>
-          <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
-            <Link href="/friends">Friends</Link>
-          </button>
+          <Link href="/create-post">
+            <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
+              Create a Post
+            </button>
+          </Link>
+          <Link href="/friends">
+            <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
+              Friends
+            </button>
+          </Link>
           <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
             Liked Posts
           </button>
