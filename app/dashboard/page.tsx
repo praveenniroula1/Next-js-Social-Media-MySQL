@@ -47,7 +47,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row justify-between m-8 space-y-4 md:space-y-0">
+    <div className="flex flex-col md:flex-row justify-between m-5">
 
       <UserCard />
 

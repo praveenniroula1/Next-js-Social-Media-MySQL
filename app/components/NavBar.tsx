@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
       if (response.data.success === true) {
         dispatch(clearUser());
         router.push("/");
-        router.refresh(); 
+        router.refresh();
       }
     } catch (error) {
       console.log(error);
@@ -26,58 +26,65 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-black p-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="text-white text-2xl font-bold">
+        {/* Logo and User Greeting */}
+        <div className="text-white text-2xl font-bold flex items-center space-x-2">
           <Link href="/">
-            <span className="font-bold text-4xl drop-shadow-[0_1px_2px_rgba(25,215,255,1)] flex justify-center items-center h-9">
+            <span className="text-4xl font-extrabold tracking-wide flex items-center">
               <span className="text-white">S</span>
               <span className="text-white">H</span>
               <span className="text-white">O</span>
               <span className="text-white">W</span>
-              <span className="text-orange-600">C</span>
-              <span className="text-orange-600">A</span>
-              <span className="text-orange-600">S</span>
-              <span className="text-orange-600">E</span>
-              <span className="text-white m-5 flex text-3xl">
-                <CgSearchLoading className="" />{" "}
-                {user && user.name && `Welcome ${user.name}`}
-              </span>
+              <span className="text-orange-500">C</span>
+              <span className="text-orange-500">A</span>
+              <span className="text-orange-500">S</span>
+              <span className="text-orange-500">E</span>
             </span>
           </Link>
+          {user && user.name && (
+            <span className="ml-6 text-xl flex items-center space-x-2">
+              <CgSearchLoading className="text-white" />
+              <span className="font-medium text-white">
+                Welcome, <span className="text-gray-200">{user.name}</span>
+              </span>
+            </span>
+          )}
         </div>
-        <ul className="flex space-x-4">
+
+        {/* Navigation Links */}
+        <ul className="flex space-x-8">
           {user ? (
             <>
               <li>
-                <Link href="/" className="text-white hover:text-gray-400">
+                <Link href="/" className="text-white hover:text-gray-400 transition duration-200">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/friends" className="text-white hover:text-gray-400">
+                <Link href="/friends" className="text-white hover:text-gray-400 transition duration-200">
                   Friends
                 </Link>
               </li>
               <li>
-                <Link href="/messages" className="text-white hover:text-gray-400">
+                <Link href="/messages" className="text-white hover:text-gray-400 transition duration-200">
                   Messages
                 </Link>
               </li>
               <li>
-                <Link href="/notifications" className="text-white hover:text-gray-400">
+                <Link href="/notifications" className="text-white hover:text-gray-400 transition duration-200">
                   Notifications
                 </Link>
               </li>
               <li>
-                <Link href="/" className="text-white hover:text-gray-400" onClick={logout}>
+                <Link href="/" className="text-white hover:text-gray-400 transition duration-200" onClick={logout}>
                   Logout
                 </Link>
               </li>
             </>
           ) : (
             <li>
-              <Link href="/" className="text-white hover:text-gray-400">
+              <Link href="/" className="text-white hover:text-gray-400 transition duration-200">
                 Login
               </Link>
             </li>

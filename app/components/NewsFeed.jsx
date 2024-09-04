@@ -12,7 +12,7 @@ const NewsFeed = () => {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [userPost, setUserPost] = useState([]);
   const [likesCount, setLikesCount] = useState({});
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   const fetchPosts = async () => {
     try {
@@ -48,7 +48,7 @@ const NewsFeed = () => {
     const fetchData = async () => {
       await fetchPosts();
       await fetchLikedPosts();
-      setLoading(false); // Set loading to false after data is fetched
+      setLoading(false);
     };
     fetchData();
   }, []);
@@ -64,7 +64,6 @@ const NewsFeed = () => {
   const handleLike = async (postId) => {
     const alreadyLiked = likedPosts.has(postId);
 
-    // Optimistically update UI
     setLikedPosts((prev) =>
       alreadyLiked
         ? new Set([...prev].filter((id) => id !== postId))
@@ -75,7 +74,6 @@ const NewsFeed = () => {
       [postId]: (prev[postId] || 0) + (alreadyLiked ? -1 : 1),
     }));
 
-    // Dispatch action to Redux
     dispatch(toogleLike({ id: postId }));
 
     try {
@@ -83,7 +81,6 @@ const NewsFeed = () => {
         postId,
         liked: !alreadyLiked,
       });
-      // Refetch like count to ensure accuracy
       fetchLikesCount(postId);
     } catch (error) {
       console.log("Error toggling like:", error);
@@ -91,30 +88,30 @@ const NewsFeed = () => {
   };
 
   if (loading) {
-    return <p>Loading...</p>; // Add a loading state
+    return <p className="text-center text-gray-500">Loading...</p>;
   }
 
   return (
-    <div className="flex flex-col m-auto w-[50%] items-center space-y-8 py-10">
+    <div className="flex flex-col items-center space-y-8 py-10">
       {userPost.length === 0 ? (
-        <p>No posts available</p>
+        <p className="text-gray-500">No posts available</p>
       ) : (
         userPost.map((item, index) => (
           <div
             key={item.postId || index}
-            className="bg-white rounded-lg shadow-lg p-6 w-96 hover:shadow-2xl transition duration-300 ease-in-out"
+            className="bg-white text-black rounded-lg shadow-lg p-6 w-[130%] hover:shadow-xl transition-shadow duration-300 ease-in-out"
           >
-            <div className="flex items-center space-x-2 mb-4">
-              <CgProfile className="text-3xl text-gray-500" />
+            <div className="flex items-center space-x-3 mb-4">
+              <CgProfile className="text-4xl text-gray-700" />
               <div>
-                <h3 className="font-semibold">{item.userName}</h3>
+                <h3 className="font-semibold text-lg">{item.userName}</h3>
                 <p className="text-sm text-gray-500">
                   {new Date(item.createdAt).toLocaleString()}
                 </p>
               </div>
             </div>
 
-            <h1 className="text-xl font-semibold mb-4 text-center">
+            <h1 className="text-2xl font-bold mb-4 text-center">
               {item.description}
             </h1>
 
@@ -122,8 +119,8 @@ const NewsFeed = () => {
               <div className="flex justify-center mb-4">
                 <Image
                   src={item.imageUrl}
-                  height={500}
-                  width={500}
+                  height={400}
+                  width={400}
                   className="rounded-lg object-cover"
                   alt="Post Image"
                 />
@@ -135,8 +132,10 @@ const NewsFeed = () => {
                 <button onClick={() => handleLike(item.postId)}>
                   <IoHeart
                     className={`text-2xl ${
-                      likedPosts.has(item.postId) ? "text-red-500" : "text-black"
-                    }`}
+                      likedPosts.has(item.postId)
+                        ? "text-red-500"
+                        : "text-gray-700"
+                    } hover:text-red-400 transition-colors duration-200 ease-in-out`}
                   />
                 </button>
                 <span className="text-gray-600 font-medium">
@@ -145,9 +144,9 @@ const NewsFeed = () => {
               </div>
               <input
                 placeholder="Add a comment..."
-                className="border rounded-lg p-2 w-full mr-2 text-sm"
+                className="border border-gray-300 rounded-lg p-2 w-full mr-2 text-sm"
               />
-              <button className="bg-blue-500 text-white rounded-lg px-4 py-2 text-sm">
+              <button className="bg-black text-white rounded-lg px-4 py-2 text-sm hover:bg-gray-800 transition-colors duration-200 ease-in-out">
                 Comment
               </button>
             </div>

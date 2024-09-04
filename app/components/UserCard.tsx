@@ -24,13 +24,13 @@ const UserCard = () => {
   }, []);
 
   return (
-    <div className="w-full md:w-1/4 mt-3">
-      <div className="flex flex-col items-center w-full bg-gray-800 text-white p-6 rounded-lg shadow-lg">
+    <div className="w-full md:w-1/3 lg:w-1/4 xl:w-1/5 mt-3">
+      <div className="flex flex-col items-center w-full bg-black text-white p-6 rounded-lg shadow-lg">
         {/* Profile Icon and Name */}
         <Link href="/profile">
-          <div className="flex flex-col items-center mb-6 cursor-pointer">
-            <CgProfile className="text-6xl text-blue-500 mb-4" />
-            <div className="text-2xl font-semibold">
+          <div className="flex flex-col items-center mb-6 cursor-pointer hover:scale-105 transition-transform duration-200">
+            <CgProfile className="text-7xl text-white mb-4" />
+            <div className="text-2xl font-bold tracking-wide">
               {user?.name || "User Name"}
             </div>
           </div>
@@ -40,23 +40,23 @@ const UserCard = () => {
         <div className="w-full mb-6">
           <div className="flex justify-around text-center mb-4">
             <div>
-              <div className="text-xl font-semibold">{posts}</div>
-              <div className="text-gray-300">Posts</div>
+              <div className="text-2xl font-semibold">{posts}</div>
+              <div className="text-gray-400">Posts</div>
             </div>
             <div>
-              <div className="text-xl font-semibold">
+              <div className="text-2xl font-semibold">
                 {user?.followers || 0}
               </div>
-              <div className="text-gray-300">Followers</div>
+              <div className="text-gray-400">Followers</div>
             </div>
             <div>
-              <div className="text-xl font-semibold">
+              <div className="text-2xl font-semibold">
                 {user?.following || 0}
               </div>
-              <div className="text-gray-300">Following</div>
+              <div className="text-gray-400">Following</div>
             </div>
           </div>
-          <hr className="border-gray-500" />
+          <hr className="border-gray-600" />
         </div>
 
         {/* Search bar */}
@@ -64,29 +64,33 @@ const UserCard = () => {
           <input
             type="text"
             placeholder="Search for people and posts..."
-            className="w-full px-4 py-2 text-black rounded-md border border-gray-300 focus:outline-none focus:border-blue-500"
+            className="w-full px-4 py-2 text-black rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white transition duration-200"
           />
         </div>
 
         {/* Additional Items */}
-        <div className="w-full">
-          <Link href="/create-post">
-            <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
-              Create a Post
-            </button>
-          </Link>
-          <Link href="/friends">
-            <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
-              Friends
-            </button>
-          </Link>
-          <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
-            Liked Posts
-          </button>
-          <button className="w-full py-2 mb-2 bg-blue-500 hover:bg-blue-600 rounded-md transition duration-200">
-            Commented Posts
-          </button>
-        </div>
+        <div className="w-full text-black space-y-4">
+  <Link href="/create-post">
+    <button className="w-full py-2 bg-gray-900 text-white border border-white rounded-md hover:bg-white hover:text-black transition-all duration-300">
+      Create a Post
+    </button>
+  </Link>
+  <Link href="/friends">
+    <button className="w-full py-2 mt-2 bg-gray-900 text-white border border-white rounded-md hover:bg-white hover:text-black transition-all duration-300">
+      Friends
+    </button>
+  </Link>
+  <Link href="/liked-posts">
+    <button className="w-full py-2 mt-2 bg-gray-900 text-white border border-white rounded-md hover:bg-white hover:text-black transition-all duration-300">
+      Liked Posts
+    </button>
+  </Link>
+  <Link href="/commented-posts">
+    <button className="w-full py-2 mt-2 bg-gray-900 text-white border border-white rounded-md hover:bg-white hover:text-black transition-all duration-300">
+      Commented Posts
+    </button>
+  </Link>
+</div>
       </div>
     </div>
   );
