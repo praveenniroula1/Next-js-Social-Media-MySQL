@@ -4,7 +4,6 @@ import UserCard from "../components/UserCard";
 import SponsoredCard from "../components/SponsorCard";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { METHODS } from "http";
 import Image from "next/image";
 
 const CreatePost = () => {
@@ -36,41 +35,43 @@ const CreatePost = () => {
     try {
       const formData = new FormData();
       formData.append("description", form.description);
-  
+
       images.forEach((image) => {
         formData.append("images", image);
       });
-  
-      const response = await axios.post("http://localhost:3000/api/posts", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-  
+
+      const response = await axios.post(
+        "http://localhost:3000/api/posts",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
     } catch (error) {
       console.log(error);
     }
   };
-  
 
   return (
-    <div className="flex justify-between h-screen p-8">
+    <div className="flex justify-between h-screen p-8  text-white">
       {/* left - Sidebar */}
       <UserCard />
 
-      {/* center - NewsFeed */}
-      <div className="flex relative justify-center items-start h-full bg-gray-100 border-2 border-black">
+      {/* center - Post Form */}
+      <div className="flex relative justify-center items-start h-full w-full md:w-3/5 border-white p-6 rounded-lg shadow-lg">
         <form
-          className="bg-white shadow-lg rounded-lg p-6 max-w-lg w-full"
+          className="bg-black text-white shadow-lg rounded-lg p-6 max-w-lg w-full"
           onSubmit={handleOnSubmit}
         >
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+          <h2 className="text-3xl font-bold text-center text-white mb-6">
             Create a Post
           </h2>
 
           <div className="mb-4">
             <label
-              className="block text-gray-700 font-medium mb-2"
+              className="block text-white font-medium mb-2"
               htmlFor="description"
             >
               Description
@@ -80,8 +81,8 @@ const CreatePost = () => {
               name="description"
               value={form.description}
               id="description"
-              className="w-full p-3 h-24 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-              placeholder="Write something amazing..."
+              className="w-full p-3 h-24 border border-white rounded-lg bg-gray-900 text-white focus:outline-none focus:ring-2 focus:ring-white resize-none"
+              placeholder="Write something amazing about your moment..."
             ></textarea>
           </div>
 
@@ -90,16 +91,16 @@ const CreatePost = () => {
             {images.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {images.map((image, index) => (
-                  <div key={index} className="relative w-24 h-24">
+                  <div key={index} className="relative w-24 h-24 border-2 border-white rounded-lg">
                     <Image
                       src={URL.createObjectURL(image)}
                       alt={`preview-${index}`}
-                      className="object-cover w-full h-full rounded-lg border"
+                      className="object-cover w-full h-full rounded-lg"
                     />
                     <button
                       type="button"
                       onClick={() => handleRemoveImage(index)}
-                      className="absolute top-0 right-0 bg-red-500 text-black text-3xl rounded-full p-1 focus:outline-none"
+                      className="absolute top-0 right-0 bg-black text-white text-xl rounded-full p-1 focus:outline-none"
                     >
                       &times;
                     </button>
@@ -111,7 +112,7 @@ const CreatePost = () => {
 
           <div className="mb-6">
             <label
-              className="block text-gray-700 font-medium mb-2"
+              className="block text-white font-medium mb-2"
               htmlFor="images"
             >
               Upload Images
@@ -122,14 +123,14 @@ const CreatePost = () => {
               accept="image/*"
               multiple
               onChange={handleImageChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-3 border border-white bg-gray-900 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white"
             />
-            <p className="text-gray-500 text-sm mt-2">
+            <p className="text-gray-400 text-sm mt-2">
               You can upload up to 5 images.
             </p>
           </div>
 
-          <button className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold py-3 rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300">
+          <button className="w-full bg-white text-black font-bold py-3 rounded-lg shadow-md hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-white transition duration-300">
             Post
           </button>
         </form>

@@ -31,19 +31,22 @@ const Friends = () => {
   }, []);
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-100 min-h-screen">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Friends List</h2>
       {users?.map((user) => (
         <div
           key={user.id}
-          className="flex items-center justify-between p-2 mb-2 border border-gray-300 rounded-lg"
+          className="flex items-center justify-between p-4 mb-4 bg-white shadow-lg rounded-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300 ease-in-out"
         >
-          <div className="flex items-center">
-            <CgProfile size={40} className="text-gray-500" />
-            <span className="ml-4 text-lg font-semibold">{user.name}</span>
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-full">
+              <CgProfile size={24} className="text-gray-600" />
+            </div>
+            <span className="text-lg font-semibold text-gray-700">{user.name}</span>
           </div>
           <button
             onClick={() => handleUnfollow(user.id)}
-            className="px-4 py-2 text-white bg-red-500 rounded hover:bg-blue-600"
+            className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors duration-300 ease-in-out"
           >
             Unfollow
           </button>
